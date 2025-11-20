@@ -1,3 +1,24 @@
+"""
+meta_cognitive_engine.py
+
+Upgraded MetaCognitiveEngine: a more powerful, extensible meta-cognitive layer that
+combines symbolic graph reasoning, embeddings-based semantics, and optional
+neural generation/scoring backends.
+
+Key upgrades:
+- Knowledge represented both as domain-keyed lists (backwards compatible) and a
+  NetworkX graph for structural/pattern reasoning.
+- Semantic embeddings via sentence-transformers (fallback to lightweight heuristics).
+- Optional FAISS index for fast vector similarity if installed.
+- Stronger analogy, pattern-transfer, concept-fusion, and constraint-relaxation
+  algorithms combining graph metrics, embedding similarity, and lightweight
+  optimization heuristics (scipy/sklearn where available).
+- Robust dependency fallbacks and informative logging.
+- Rich insight metadata (strategy, confidence, rationale).
+"""
+
+from __future__ import annotations
+
 # Place this block at the VERY TOP of the file (before any imports that load CUDA/native libs)
 #!/usr/bin/env python3
 """
@@ -19,27 +40,6 @@ os.environ.setdefault("TRANSFORMERS_VERBOSITY", "error")
 
 # If you want to force CPU-only for quick debugging in Colab:
 # os.environ.setdefault("CUDA_VISIBLE_DEVICES", "")
-
-"""
-meta_cognitive_engine.py
-
-Upgraded MetaCognitiveEngine: a more powerful, extensible meta-cognitive layer that
-combines symbolic graph reasoning, embeddings-based semantics, and optional
-neural generation/scoring backends.
-
-Key upgrades:
-- Knowledge represented both as domain-keyed lists (backwards compatible) and a
-  NetworkX graph for structural/pattern reasoning.
-- Semantic embeddings via sentence-transformers (fallback to lightweight heuristics).
-- Optional FAISS index for fast vector similarity if installed.
-- Stronger analogy, pattern-transfer, concept-fusion, and constraint-relaxation
-  algorithms combining graph metrics, embedding similarity, and lightweight
-  optimization heuristics (scipy/sklearn where available).
-- Robust dependency fallbacks and informative logging.
-- Rich insight metadata (strategy, confidence, rationale).
-"""
-
-from __future__ import annotations
 
 import logging
 import math
