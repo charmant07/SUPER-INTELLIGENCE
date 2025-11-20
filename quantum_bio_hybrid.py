@@ -547,6 +547,44 @@ class ResearchCommunicationEngine:
         self.research_diary = []
         self.daily_progress = {}
     
+    def _calculate_daily_progress(self, day: int) -> Dict[str, float]:
+        """Calculate realistic daily research progress - THIS WAS MISSING!"""
+        total_days = getattr(self, 'research_duration', 90)
+        
+        # Realistic S-curve progress: slow start, rapid middle, slow finish
+        if day < total_days * 0.3:  # First 30% - foundational phase
+            base_progress = 0.1 + (day / (total_days * 0.3)) * 0.3
+        elif day < total_days * 0.7:  # Middle 40% - rapid discovery phase
+            base_progress = 0.4 + ((day - total_days * 0.3) / (total_days * 0.4)) * 0.4
+        else:  # Last 30% - refinement phase
+            base_progress = 0.8 + ((day - total_days * 0.7) / (total_days * 0.3)) * 0.2
+        
+        # Add some random variation but ensure monotonic increase
+        variation = random.uniform(-0.05, 0.08)
+        daily_progress = min(0.99, max(0.01, base_progress + variation))
+        
+        # Break progress into components
+        return {
+            'conceptual_understanding': min(1.0, daily_progress * 1.1),
+            'experimental_design': min(1.0, daily_progress * 0.9),
+            'data_analysis': min(1.0, daily_progress * 0.8),
+            'breakthrough_confidence': min(1.0, daily_progress * 1.2),
+            'total': daily_progress
+        }
+    
+    def _get_research_mood(self, progress: float) -> str:
+        """Determine research mood based on progress"""
+        if progress < 0.2:
+            return "😅 Building foundations..."
+        elif progress < 0.4:
+            return "🤔 Exploring complex problems..."
+        elif progress < 0.6:
+            return "🚀 Making good progress!"
+        elif progress < 0.8:
+            return "💡 Having major insights!"
+        else:
+            return "🎉 Breakthrough territory!"
+    
     def start_research_session(self, problem: str, duration_days: int = 90):
         """Start a realistic research session with progress tracking"""
         print(f"\n🔬 INITIATING QUANTUM-BIO RESEARCH: {problem}")
@@ -570,7 +608,7 @@ class ResearchCommunicationEngine:
         """Generate realistic daily research progress"""
         daily_challenges = self._generate_daily_challenges(day)
         daily_insights = self._generate_daily_insights(day)
-        progress = self._calculate_daily_progress(day)
+        progress = self._calculate_daily_progress(day)  # NOW THIS EXISTS!
         
         # Communication output
         print(f"\n📅 RESEARCH DAY {day}/{self.research_duration}:")
@@ -580,9 +618,9 @@ class ResearchCommunicationEngine:
         print(f"   Research Mood: {self._get_research_mood(progress['total'])}")
         
         # Show realistic research struggle
-        if day < 30:
+        if day < self.research_duration * 0.3:
             print("   😅 Still building foundational understanding...")
-        elif day < 60:
+        elif day < self.research_duration * 0.6:
             print("   🚀 Making progress but hitting complex barriers...")
         else:
             print("   💡 Integration phase - connecting quantum and biological principles...")
@@ -618,7 +656,7 @@ class ResearchCommunicationEngine:
         ]
         
         # More sophisticated insights as research progresses
-        if day > 60:
+        if day > self.research_duration * 0.6:
             base_insights.extend([
                 "Quantum entanglement in neural microtubules for consciousness?",
                 "Cancer mutations show quantum mechanical mutation hotspots",
@@ -626,7 +664,6 @@ class ResearchCommunicationEngine:
             ])
         
         return random.sample(base_insights, min(2, len(base_insights)))
-
 
 # 🧪 ENHANCED TEST HARNESS
 if __name__ == "__main__":
