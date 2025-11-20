@@ -1,3 +1,25 @@
+# Place this block at the VERY TOP of the file (before any imports that load CUDA/native libs)
+#!/usr/bin/env python3
+"""
+Stability header — set environment variables and minimal framework detection.
+Must run before importing TensorFlow / PyTorch / JAX or other CUDA-using libs.
+"""
+
+import os
+
+# Reduce TensorFlow / Abseil log verbosity (0=all,1=info,2=warning,3=error)
+os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "2")
+os.environ.setdefault("ABSL_CPP_MIN_LOG_LEVEL", "2")
+
+# Avoid TF pre-allocating all GPU memory (useful if you mix libs or want growth)
+os.environ.setdefault("TF_FORCE_GPU_ALLOW_GROWTH", "true")
+
+# Silence transformers progress/verbosity (optional)
+os.environ.setdefault("TRANSFORMERS_VERBOSITY", "error")
+
+# If you want to force CPU-only for quick debugging in Colab:
+# os.environ.setdefault("CUDA_VISIBLE_DEVICES", "")
+
 """
 meta_cognitive_engine.py
 
